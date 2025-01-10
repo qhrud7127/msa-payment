@@ -81,7 +81,7 @@ export default function ProductList() {
   }
 
   return (
-    <div>
+    <div className={'flex'}>
       <DataGrid
         ref={dataGridRef}
         dataSource={store}
