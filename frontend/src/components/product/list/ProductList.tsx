@@ -71,13 +71,11 @@ export default function ProductList() {
 
 
   const quantityChanged = (e: ValueChangedEvent) => {
-    console.log(e)
     setSelectProduct({...selectProduct, quantity: e.value});
   }
 
   const onClick = async () => {
-    console.log(selectProduct)
-    await axios.get('/api/orders/ready', {params: {productId: selectProduct.id}}).then((response) => {
+    await axios.get('/api/orders/ready', {params: {productId: selectProduct.id, quantity: selectProduct.quantity}}).then((response) => {
       location.href = response.data.next_redirect_pc_url;
     });
   }

@@ -40,7 +40,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
 
-    public ReadyResponse ready(String agent, String openType, Long productId) {
+    public ReadyResponse ready(String agent, String openType, Long productId, Long quantity) {
         Products product = productRepository.findById(productId).orElseThrow();
 
         // Request header
@@ -49,13 +49,14 @@ public class OrderService {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         // Request param
+        int quantityInt = Math.toIntExact(quantity);
         ReadyRequest readyRequest = ReadyRequest.builder()
           .cid(cid)
           .partnerOrderId("1")
           .partnerUserId("1")
           .itemName(product.getName())
-          .quantity(1)
-          .totalAmount(product.getPrice().intValue())
+          .quantity(quantityInt)
+          .totalAmount(product.getPrice().intValue() * quantityInt)
           .taxFreeAmount(0)
           .vatAmount(100)
           .approvalUrl(frontHost + "/approve/" + agent + "/" + openType)
@@ -103,11 +104,11 @@ public class OrderService {
         }
     }
 
-    public void ready(String tid, Long productId) {
+    public void readyLog(String tid, Long productId, Long quantity) {
         Orders order = new Orders();
         order.setTid(tid);
-        order.setQuantity(1L); // 수량 임시 고정
-        order.setUserId("bokyungkim"); // 수량 임시 고정
+        order.setQuantity(quantity);
+        order.setUserId("bokyungkim"); // ID 임시 고정
         order.setProducts(productRepository.findById(productId).orElseThrow());
         order.setStatus("ready");
         orderRepository.save(order);

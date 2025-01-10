@@ -16,9 +16,9 @@ public class OrdersController {
     private final OrderService orderService;
 
     @GetMapping("/orders/ready")
-    public ReadyResponse ready(@RequestParam Long productId) {
-        ReadyResponse readyResponse = orderService.ready("pc", "popup", productId);
-        orderService.ready(readyResponse.getTid(),productId);
+    public ReadyResponse ready(@RequestParam Long productId, @RequestParam Long quantity) {
+        ReadyResponse readyResponse = orderService.ready("pc", "popup", productId, quantity);
+        orderService.readyLog(readyResponse.getTid(), productId, quantity);
         return readyResponse;
     }
 
