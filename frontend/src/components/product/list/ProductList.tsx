@@ -1,8 +1,10 @@
-import {Button, DataGrid} from "devextreme-react";
-import {Column, DataGridRef, Editing} from "devextreme-react/data-grid";
-import {useRef} from "react";
+import {Button, DataGrid, NumberBox} from "devextreme-react";
+import {Column, DataGridRef, Editing, Selection} from "devextreme-react/data-grid";
+import {useCallback, useRef, useState} from "react";
 import {CustomStore} from "devextreme/common/data";
 import axios from "axios";
+import {SelectionChangedEvent} from "devextreme/ui/data_grid";
+import {ValueChangedEvent} from "devextreme/ui/number_box";
 
 const store = new CustomStore({
   key: 'id',
@@ -30,25 +32,54 @@ const store = new CustomStore({
   },
 });
 
+interface Product {
+  id: number | undefined;
+  name: string;
+  type: string;
+  quantity: number;
+  price: number;
+}
 
-const onClick = async (data) => {
-  await axios.get('/api/orders/ready', {params: {productId: data.id}}).then((response) => {
-    location.href = response.data.next_redirect_pc_url;
-  });
+const initProduct = {
+  id: undefined,
+  name: '',
+  type: '',
+  quantity: 1,
+  price: 0,
 }
 
 
 export default function ProductList() {
   const dataGridRef = useRef<DataGridRef>(null);
+  const [selectProduct, setSelectProduct] = useState<Product>(initProduct);
 
-  const PayCell = (e: any) => {
+  const onSelectionChanged = useCallback(({selectedRowsData}: SelectionChangedEvent) => {
+    const data = selectedRowsData[0];
+    data.quantity = 1;
+    setSelectProduct(data);
+  }, []);
+
+  const PayCell = () => {
     return (<Button
       width={200}
       text="카카오페이로 결제하기"
       type="normal"
       stylingMode="contained"
-      onClick={() => onClick(e.data)}
+      onClick={onClick}
     />)
+  }
+
+
+  const quantityChanged = (e: ValueChangedEvent) => {
+    console.log(e)
+    setSelectProduct({...selectProduct, quantity: e.value});
+  }
+
+  const onClick = async () => {
+    console.log(selectProduct)
+    await axios.get('/api/orders/ready', {params: {productId: selectProduct.id}}).then((response) => {
+      location.href = response.data.next_redirect_pc_url;
+    });
   }
 
   return (
@@ -57,8 +88,11 @@ export default function ProductList() {
         ref={dataGridRef}
         dataSource={store}
         showBorders={true}
+        onSelectionChanged={onSelectionChanged}
         remoteOperations={true}
+        width={'50%'}
       >
+        <Selection mode="single"/>
         <Editing
           mode="row"
           allowDeleting={true}
@@ -76,8 +110,26 @@ export default function ProductList() {
           dataField="price"
           dataType="number"
         />
-        <Column caption="Payment" cellRender={PayCell} visible={true}/>
+        {/*<Column caption="Payment" cellRender={PayCell} visible={true}/>*/}
       </DataGrid>
+      {selectProduct && (
+        <div id="employee-info">
+          {selectProduct.id && (
+            <div>
+              <div>{selectProduct.name}</div>
+              <div>{selectProduct.price}</div>
+              <NumberBox
+                value={selectProduct.quantity}
+                min={1}
+                max={20}
+                showSpinButtons={true}
+                onValueChanged={quantityChanged}
+              />
+              <PayCell/>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
