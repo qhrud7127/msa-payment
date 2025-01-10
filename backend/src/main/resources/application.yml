@@ -1,3 +1,14 @@
+# Kakaopay Developers 에서 앱 생성 후 발급받은 admin key
+# Admin key created by App of KakaoDevelopers
+kakaopay.api.secret.key: DEV165ECEF683892DCAE7B159EE3DA02D090BC46
+
+# Kakaopay 로부터 전달받은 가맹점 ID
+# partner payment id from KakaoPay
+cid: TC0ONETIME
+
+front:
+  host: http://localhost:3000
+
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -10,4 +21,4 @@ spring:
       hibernate:
         format_sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update

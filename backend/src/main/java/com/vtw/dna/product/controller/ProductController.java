@@ -1,6 +1,6 @@
 package com.vtw.dna.product.controller;
 
-import com.vtw.dna.product.domain.Product;
+import com.vtw.dna.product.domain.Products;
 import com.vtw.dna.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,13 +17,14 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/products")
-    public List<Product> getProducts() {
-        List<Product> list = productService.findAll();
+    public List<Products> getProducts() {
+        List<Products> list = productService.findAll();
         return list;
     }
 
+
     @PostMapping("/products")
-    public Product addProduct(@RequestBody Product product) {
+    public Products addProduct(@RequestBody Products product) {
         return productService.create(product);
     }
 

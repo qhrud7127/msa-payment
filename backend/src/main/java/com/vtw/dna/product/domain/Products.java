@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @Entity
-public class Product {
+public class Products {
 
     @Id
     @GeneratedValue
@@ -16,4 +16,6 @@ public class Product {
     private String name;
 
     private String type;
+
+    private Long price;
 }
