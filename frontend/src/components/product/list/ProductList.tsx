@@ -63,7 +63,7 @@ export default function ProductList() {
     return (<Button
       width={200}
       text="카카오페이로 결제하기"
-      type="normal"
+      type="default"
       stylingMode="contained"
       onClick={onClick}
     />)

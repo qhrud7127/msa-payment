@@ -20,20 +20,20 @@ export default function Approve() {
   };
 
   return (
-    <>
+    <div className={'flex flex-col items-center'}>
       {!result &&
-        <Button onClick={handleApprove}>
-          버튼을 누르면 결제가 완료됩니다.
+        <Button className={'my-10'} onClick={handleApprove}>
+          이 버튼을 누르면 결제가 완료됩니다.
         </Button>
       }
       {result &&
-        <div>
-          <p>{result?.amount.total}원이 결제 되었습니다.</p>
-          <a href={'/'}>
+        <div className={'flex flex-col items-center'}>
+          <div className={'font-bold text-xl my-10'}>{result?.amount.total}원이 결제 되었습니다.</div>
+          <a className={'px-4 py-2 border-1 rounded-xl bg-blue-100 hover:bg-blue-200'} href={'/'}>
             상품 목록으로 돌아가기
           </a>
         </div>
       }
-    </>
+    </div>
   );
 }
