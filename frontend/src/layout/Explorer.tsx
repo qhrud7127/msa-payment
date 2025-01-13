@@ -1,7 +1,7 @@
 export default function Explorer() {
   return (
-    <div>
-      explorer
+    <div id={'explorer'}>
+      {/*explorer*/}
     </div>
   );
 }

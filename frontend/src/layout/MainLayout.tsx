@@ -5,7 +5,7 @@ import Content from "./Content.tsx";
 
 export default function MainLayout() {
   return (
-    <div>
+    <div id={'main-layout'}>
       <Header/>
       <Explorer/>
       <Content/>

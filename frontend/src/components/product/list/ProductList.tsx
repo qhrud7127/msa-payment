@@ -59,7 +59,7 @@ export default function ProductList() {
     setSelectProduct(data);
   }, []);
 
-  const PayCell = () => {
+  const PayButton = () => {
     return (<Button
       width={200}
       text="카카오페이로 결제하기"
@@ -75,20 +75,24 @@ export default function ProductList() {
   }
 
   const onClick = async () => {
-    await axios.get('/api/orders/ready', {params: {productId: selectProduct.id, quantity: selectProduct.quantity}}).then((response) => {
+    await axios.get('/api/orders/ready', {
+      params: {
+        productId: selectProduct.id,
+        quantity: selectProduct.quantity
+      }
+    }).then((response) => {
       location.href = response.data.next_redirect_pc_url;
     });
   }
 
   return (
-    <div className={'flex'}>
+    <div className={''}>
       <DataGrid
         ref={dataGridRef}
         dataSource={store}
         showBorders={true}
         onSelectionChanged={onSelectionChanged}
         remoteOperations={true}
-        width={'50%'}
       >
         <Selection mode="single"/>
         <Editing
@@ -108,24 +112,36 @@ export default function ProductList() {
           dataField="price"
           dataType="number"
         />
-        {/*<Column caption="Payment" cellRender={PayCell} visible={true}/>*/}
       </DataGrid>
-      {selectProduct && (
-        <div id="employee-info">
-          {selectProduct.id && (
-            <div>
-              <div>{selectProduct.name}</div>
-              <div>{selectProduct.price}</div>
+      {selectProduct.id && (
+        <div className={'flex justify-between m-4 '}>
+          <div className={"flex items-center w-full"}>
+            <div className={'w-2/3'}>
+              {selectProduct.name}
+            </div>
+            <div className={''}>
+              <div className={"mb-2"}>
+                {selectProduct.price.toLocaleString('ko-KR')}원
+              </div>
               <NumberBox
+                className=" pb-2"
                 value={selectProduct.quantity}
                 min={1}
                 max={20}
                 showSpinButtons={true}
                 onValueChanged={quantityChanged}
               />
-              <PayCell/>
             </div>
-          )}
+          </div>
+          <div className={"rounded-2xl bg-zinc-100 p-10"}>
+            <div className={"flex justify-between"}>
+              <div className={'font-bold pb-1'}>결제 예정 금액</div>
+              <div className={"mb-4 pb-2"}>
+                {(selectProduct.price * selectProduct.quantity).toLocaleString('ko-KR')}원
+              </div>
+            </div>
+            <PayButton/>
+          </div>
         </div>
       )}
     </div>

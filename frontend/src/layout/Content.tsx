@@ -4,7 +4,7 @@ import Approve from "../components/kakaopay/approve/Approve.tsx";
 
 export default function Content() {
   return (
-    <div>
+    <div id={'content'}>
       <Routes>
         <Route path="*" element={<ProductList/>}/>
         <Route path="/approve/pc/popup" element={<Approve/>}/></Routes>

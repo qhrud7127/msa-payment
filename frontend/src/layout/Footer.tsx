@@ -1,7 +1,7 @@
 export default function Footer() {
   return (
-    <div>
-      footer
+    <div id={'footer'}>
+      {/*footer*/}
     </div>
   );
 }
