@@ -8,7 +8,6 @@ import com.vtw.dna.kakaopay.domain.ReadyRequest;
 import com.vtw.dna.kakaopay.domain.ReadyResponse;
 import com.vtw.dna.order.domain.Orders;
 import com.vtw.dna.order.repository.OrderRepository;
-import com.vtw.dna.product.domain.Products;
 import com.vtw.dna.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,8 +39,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
 
-    public ReadyResponse ready(String agent, String openType, Long productId, Long quantity) {
-        Products product = productRepository.findById(productId).orElseThrow();
+    public ReadyResponse ready(String agent, String openType, Long orderId, Long amount, Long quantity) {
 
         // Request header
         HttpHeaders headers = new HttpHeaders();
@@ -50,18 +48,8 @@ public class OrderService {
 
         // Request param
         int quantityInt = Math.toIntExact(quantity);
-        ReadyRequest readyRequest = ReadyRequest.builder()
-          .cid(cid)
-          .partnerOrderId("1")
-          .partnerUserId("1")
-          .itemName(product.getName())
-          .quantity(quantityInt)
-          .totalAmount(product.getPrice().intValue() * quantityInt)
-          .taxFreeAmount(0)
-          .vatAmount(100)
-          .approvalUrl(frontHost + "/approve/" + agent + "/" + openType)
-          .cancelUrl(frontHost + "/cancel/" + agent + "/" + openType)
-          .failUrl(frontHost + "/fail/" + agent + "/" + openType).build();
+        int amountInt = Math.toIntExact(amount);
+        ReadyRequest readyRequest = ReadyRequest.builder().cid(cid).partnerOrderId("1").partnerUserId("1").itemName("dna 상품 결제").quantity(quantityInt).totalAmount(amountInt).taxFreeAmount(0).vatAmount(100).approvalUrl(frontHost + "/product/checkout?orderId=" + orderId + "&step=3").cancelUrl(frontHost + "/cancel/" + agent + "/" + openType).failUrl(frontHost + "/fail/" + agent + "/" + openType).build();
 
         // Send reqeust
         HttpEntity<ReadyRequest> entityMap = new HttpEntity<>(readyRequest, headers);
@@ -82,13 +70,7 @@ public class OrderService {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         // Request param
-        ApproveRequest approveRequest = ApproveRequest.builder()
-          .cid(cid)
-          .tid(tid)
-          .partnerOrderId("1")
-          .partnerUserId("1")
-          .pgToken(pgToken)
-          .build();
+        ApproveRequest approveRequest = ApproveRequest.builder().cid(cid).tid(tid).partnerOrderId("1").partnerUserId("1").pgToken(pgToken).build();
 
         // Send Request
         HttpEntity<ApproveRequest> entityMap = new HttpEntity<>(approveRequest, headers);

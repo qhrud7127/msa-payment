@@ -7,7 +7,7 @@ kakaopay.api.secret.key: DEV165ECEF683892DCAE7B159EE3DA02D090BC46
 cid: TC0ONETIME
 
 front:
-  host: http://localhost:3000
+  host: http://localhost:8081
 
 spring:
   datasource:
@@ -21,4 +21,4 @@ spring:
       hibernate:
         format_sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop

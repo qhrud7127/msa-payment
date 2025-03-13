@@ -15,17 +15,17 @@ public class OrdersController {
 
     private final OrderService orderService;
 
-    @GetMapping("/orders/ready")
-    public ReadyResponse ready(@RequestParam Long productId, @RequestParam Long quantity) {
-        ReadyResponse readyResponse = orderService.ready("pc", "popup", productId, quantity);
-        orderService.readyLog(readyResponse.getTid(), productId, quantity);
+    @GetMapping("/ready")
+    public ReadyResponse ready(@RequestParam Long orderId, @RequestParam Long amount, @RequestParam Long quantity) {
+        ReadyResponse readyResponse = orderService.ready("pc", "popup", orderId, amount, quantity);
+//        orderService.readyLog(readyResponse.getTid(), productId, quantity);
         return readyResponse;
     }
 
-    @GetMapping("/orders/approve")
+    @GetMapping("/approve")
     public String approve(@RequestParam("pg_token") String pgToken) throws JsonProcessingException {
         String approveResponse = orderService.approve(pgToken);
-        orderService.approval(approveResponse);
+//        orderService.approval(approveResponse);
         return approveResponse;
     }
 
